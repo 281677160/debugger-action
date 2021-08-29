@@ -124,10 +124,19 @@ WEB_LINE="$(tmate -S "${TMATE_SOCK}" display -p '#{tmate_web}')"
 TIMEOUT_MESSAGE="If you don't connect to this session, it will be *SKIPPED* in ${timeout} seconds at ${kill_date}. To skip this step now, simply connect the ssh and exit."
 echo -e "$TIMEOUT_MESSAGE"
 
-if [[ -n "$TELEGRAM_TOKEN" ]]; then
+if [[ -n "${TELEGRAM_BOT_TOKEN}" && -n "${TELEGRAM_CHAT_ID}" ]]; then
   MSG="SSH: ${SSH_LINE}\nWEB: ${WEB_LINE}"
-  echo -n "Sending information to Telegram Bot......"
-  curl -k --data chat_id="${TELEGRAM_CHAT_ID}" --data "text=SSH: ${SSH_LINE}  WEB: ${WEB_LINE}" "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage"
+  echo -n "......向电报机器人发送SSH连接代码......"
+  curl -k --data chat_id="${TELEGRAM_CHAT_ID}" --data "text=SSH连接代码:  
+  
+  ${SSH_LINE}  
+  
+  复制上面ssh后的蓝色部分代码使用工具进行连接
+  
+  
+  WEB: ${WEB_LINE}
+  
+  WEB代码是浏览器直接打开使用" "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
   echo ""
 fi
 
